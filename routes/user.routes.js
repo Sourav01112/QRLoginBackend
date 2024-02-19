@@ -56,26 +56,10 @@ userRouter.post("/login", async (req, res) => {
       },
         process.env.JWT_SECRET_KEY, { expiresIn: '1d' }
       )
-      if (accessToken) {
+      const userWithoutPass = { ...userExists.toObject() }
+      delete userWithoutPass.password
+      handleResponse(res, 200, "Login Successful", userWithoutPass, accessToken)
 
-
-        const qrCodeImage = await QRCode.toDataURL(accessToken);
-        if (qrCodeImage !== null || qrCodeImage !== undefined) {
-          userExists.qrCode = qrCodeImage;
-          await userExists.save();
-        }
-
-        console.log("accessTOKENQRRRR>>", qrCodeImage)
-        // return
-
-
-
-        const userWithoutPass = { ...userExists.toObject() }
-        delete userWithoutPass.password
-        handleResponse(res, 200, "Login Successful", userWithoutPass, accessToken)
-      } else {
-        handleResponse(res, 200, "Something went wrong. Please try again.")
-      }
     } else {
       handleResponse(res, 400, "User does not exist")
 
