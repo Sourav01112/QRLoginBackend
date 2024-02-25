@@ -35,7 +35,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 
 app.use((req, res, next) => {
-  console.log("inside")
   req.io = io;
   next();
 });
@@ -50,19 +49,21 @@ app.use("/api/session", sessionRouter);
 
 
 // WebSocket connection
-io.on("connection", (socket) => {
-  console.log("A user connected");
+io.on('connection', (socket) => {
+  console.log('Web client connected');
 
-  // disconnection
-  socket.on("disconnect", () => {
-    console.log("User disconnected");
+  socket.on('custom-event', (uniqueIdentifier) => {
+    socket.join(uniqueIdentifier);
+    console.log(`User with uniqueIdentifier ${uniqueIdentifier} joined the room`);
+    // io.to(uniqueIdentifier).emit('custom-event', uniqueIdentifier);
+ 
   });
 
-  // Add an event listener for the custom event
-  socket.on("userLoggedIn", (data) => {
-    console.log("User logged in:", data);
+  socket.on('queryResponse', (data) => {
+    io.to(data).emit('queryResponse', data);
   });
 });
+
 
 // Server
 server.listen(PORT, async () => {
@@ -78,3 +79,5 @@ server.listen(PORT, async () => {
 });
 
 console.log("App is running on IP " + ip.address());
+
+module.exports = {io, server}

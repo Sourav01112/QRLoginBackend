@@ -70,6 +70,16 @@ userRouter.post("/login", async (req, res) => {
   }
 });
 
+userRouter.post('/check-User', async (req, res) => {
+  const { query } = req.body
+  const userExists = await UserModel.findOne({ uniqueIdentifier: query }).select('-password')
+  if (userExists) {
+    console.log("userExists", userExists)
+    res.status(200).json({ message: 'Credentials Found', data: userExists, status: 200 })
+  }
+})
+
+
 
 module.exports = { userRouter };
 
