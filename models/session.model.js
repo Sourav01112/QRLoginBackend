@@ -8,8 +8,9 @@ const sessionSchema = new Schema(
             ref: 'user',
             trim: true
         },
-        uniqueIdentifier: { type: String, trim: true },
-        qrCode: { type: String, trim: true } // create QR code with uniquesIDentifier
+        uniqueIdentifier: { type: String, trim: true ,  required: true,},
+        qrCode: { type: String, trim: true,  required: true, },
+        expirationTime: {type:Number, required : true}
     },
     {
         versionKey: false,

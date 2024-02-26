@@ -60,6 +60,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('queryResponse', (data) => {
+    console.log("data", data)
     io.to(data).emit('queryResponse', data);
   });
 });
